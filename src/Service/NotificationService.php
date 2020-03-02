@@ -1,13 +1,12 @@
 <?php
 
-namespace Esc\Service;
+namespace Esc\Notification\Service;
 
 use Esc\Notification\Entity\Notification;
-use Esc\Notification\Entity\Notification as NotificationEntity;
 use Esc\Notification\Repository\NotificationRepository;
-use App\ValueObjects\Notification\Status;
-use App\ValueObjects\Notification\Title;
-use App\ValueObjects\Notification\Username;
+use Esc\Notification\ValueObjects\Notification\Status;
+use Esc\Notification\ValueObjects\Notification\Title;
+use Esc\Notification\ValueObjects\Notification\Username;
 use Assert\AssertionFailedException;
 use Doctrine\ORM\EntityManagerInterface;
 use Esc\MercurePublisherTrait;
@@ -45,7 +44,7 @@ class NotificationService
      */
     public function success(int $id, string $message = ''): void
     {
-        $this->update($id, NotificationEntity::SUCCESS_STATE, $message);
+        $this->update($id, Notification::SUCCESS_STATE, $message);
     }
 
     /**
@@ -55,7 +54,7 @@ class NotificationService
      */
     public function error(int $id, string $message = ''): void
     {
-        $this->update($id, NotificationEntity::ERROR_STATE, $message);
+        $this->update($id, Notification::ERROR_STATE, $message);
     }
 
     /**

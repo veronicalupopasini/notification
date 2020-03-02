@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\ValueObjects\Notification;
+namespace Esc\Notification\ValueObjects\Notification;
 
 use Assert\Assertion;
 use Assert\AssertionFailedException;
