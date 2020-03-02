@@ -1,0 +1,41 @@
+{
+    "name": "escsrl/notification",
+    "type": "library",
+    "description": "Simple notification system based on top of Mercure",
+    "keywords": [
+        "mercure",
+        "symfony",
+        "symfony-mercure",
+        "notification"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alessandro Bellanda",
+            "email": "a.bellanda@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Esc\\Notification\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.3",
+        "ext-json": "*",
+        "beberlei/assert": "^3.2",
+        "doctrine/doctrine-bundle": "^2.0",
+        "doctrine/orm": "^2.7",
+        "escsrl/mercure-publisher": "^2.0",
+        "escsrl/requestparams": "^2.0",
+        "escsrl/result": "^1.0",
+        "nesbot/carbon": "^2.30",
+        "symfony/framework-bundle": "^5.0",
+        "symfony/security-core": "^5.0",
+        "symfony/serializer": "^5.0"
+    },
+    "require-dev": {},
+    "config": {
+        "sort-packages": true
+    }
+}
