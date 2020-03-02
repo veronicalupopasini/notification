@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace Esc\Service;
 
 use Esc\Notification\Entity\Notification;
 use Esc\Notification\Entity\Notification as NotificationEntity;
