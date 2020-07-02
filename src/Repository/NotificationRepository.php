@@ -10,6 +10,7 @@ use Doctrine\ORM\Query\QueryException;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\Security\Core\Security;
+use Esc\Repository\Repository as EscRepository;
 
 /**
  * @method Notification|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\Security;
  * @method Notification[]    findAll()
  * @method Notification[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class NotificationRepository extends ServiceEntityRepository
+class NotificationRepository extends EscRepository
 {
     private $security;
 

@@ -55,6 +55,11 @@ class Notification
     private $externalLink;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $apiLink;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $username;
@@ -136,6 +141,16 @@ class Notification
         return $this;
     }
 
+    public function getApiLink(): ?string
+    {
+        return $this->apiLink;
+    }
+
+    public function setApiLink(?string $apiLink): self
+    {
+        $this->apiLink = $apiLink;
+    }
+
     public function getUsername(): ?string
     {
         return $this->username;
@@ -149,17 +164,17 @@ class Notification
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getCreated(): \DateTime
+    public function getCreated(): DateTime
     {
         return $this->created;
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getUpdated(): ?\DateTime
+    public function getUpdated(): ?DateTime
     {
         return $this->updated;
     }

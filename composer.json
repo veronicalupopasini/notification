@@ -29,6 +29,7 @@
         "escsrl/mercure-publisher": "^2.0",
         "escsrl/requestparams": "^2.0",
         "escsrl/result": "^1.0",
+        "escsrl/repository": "^1.0",
         "nesbot/carbon": "^2.30",
         "symfony/framework-bundle": "^5.0",
         "symfony/security-core": "^5.0",
