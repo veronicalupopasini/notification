@@ -7,7 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\QueryException;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\Security\Core\Security;
 use Esc\Repository\Repository as EscRepository;
@@ -26,46 +25,6 @@ class NotificationRepository extends EscRepository
     {
         parent::__construct($registry, Notification::class);
         $this->security = $security;
-    }
-
-    public function findOneById(int $id)
-    {
-        return $this->findOneBy(['id' => $id]);
-    }
-
-    /**
-     * @param int $id
-     * @return Notification
-     * @throws RuntimeException;
-     */
-    public function getOneById(int $id): Notification
-    {
-        $row = $this->findOneById($id);
-
-        if (!$row) {
-            throw new RuntimeException(sprintf('Notification %s not found', $id));
-        }
-
-        return $row;
-    }
-
-    /**
-     * @param AttributeBag $parameters
-     * @return array
-     * @throws QueryException
-     */
-    public function findByCriteria(AttributeBag $parameters): array
-    {
-        return $this->createQueryBuilder('n')
-            ->select('n')
-            ->addCriteria($this->getPaginatedAndFilteredCriteria($parameters))
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    public function countByCriteria(array $filters): int
-    {
-        return count($this->matching($this->getFiltersCriteria($filters)));
     }
 
     private function getFiltersCriteria(array $filters): Criteria
@@ -87,19 +46,4 @@ class NotificationRepository extends EscRepository
         return $criteria;
     }
 
-    private function getPaginatedAndFilteredCriteria(AttributeBag $parameters): Criteria
-    {
-        return $this->getFiltersCriteria($parameters->get('filters'))
-            ->orderBy($parameters->get('sortBy'))
-            ->setMaxResults($parameters->get('limit'))
-            ->setFirstResult($parameters->get('offset'));
-    }
-
-    private function prepareFiltersCriteria(array $filters): AttributeBag
-    {
-        $filtersBag = new AttributeBag();
-        $filtersBag->initialize($filters);
-
-        return $filtersBag;
-    }
 }
