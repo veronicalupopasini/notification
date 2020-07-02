@@ -27,7 +27,7 @@ class NotificationRepository extends EscRepository
         $this->security = $security;
     }
 
-    private function getFiltersCriteria(array $filters): Criteria
+    public function getFiltersCriteria(array $filters): Criteria
     {
         $filtersBag = $this->prepareFiltersCriteria($filters);
 
