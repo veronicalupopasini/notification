@@ -41,7 +41,6 @@
         "symfony/serializer": "^5.0"
     },
     "require-dev": {
-        "dg/bypass-finals": "^1.2",
         "phpunit/phpunit": "^8.5"
     },
     "config": {
