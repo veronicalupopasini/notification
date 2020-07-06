@@ -2,8 +2,9 @@
 
 namespace Esc\Notification\Service;
 
+use Assert\Assertion;
 use Esc\Notification\Entity\Notification;
-use Esc\Notification\LinkableInterface\LinkableInterface;
+use Esc\Notification\Link\NotificationLink;
 use Esc\Notification\Repository\NotificationRepository;
 use Esc\Notification\ValueObjects\Notification\Status;
 use Esc\Notification\ValueObjects\Notification\Title;
@@ -25,12 +26,10 @@ class NotificationService
     private $notificationRepository;
     private $normalizer;
     private $mercureEnabled;
-    private $link;
 
     public function __construct(
         EntityManagerInterface $manager,
         NotificationRepository $notificationRepository,
-        LinkableInterface $link,
         Publisher $publisher,
         NormalizerInterface $normalizer,
         bool $mercureEnabled
@@ -41,63 +40,58 @@ class NotificationService
         $this->publisher = $publisher;
         $this->normalizer = $normalizer;
         $this->mercureEnabled = $mercureEnabled;
-        $this->link = $link;
     }
 
     /**
      * @param int $id
-     * @param string $linkValue
      * @param string $message
+     * @param NotificationLink $notificationLink
      * @throws ExceptionInterface
      * @throws JsonException
      */
-    public function success(int $id, string $linkValue, string $message = ''): void
+    public function success(int $id, string $message = '', ?NotificationLink $notificationLink = null): void
     {
-        $this->update($id, Notification::SUCCESS_STATE, $message, $linkValue);
+        $this->update($id, Notification::SUCCESS_STATE, $message, $notificationLink);
     }
 
     /**
      * @param int $id
-     * @param string $linkValue
      * @param string $message
+     * @param NotificationLink $notificationLink
      * @throws ExceptionInterface
      * @throws JsonException
      */
-    public function error(int $id, string $linkValue, string $message = ''): void
+    public function error(int $id, string $message = '', ?NotificationLink $notificationLink = null): void
     {
-        $this->update($id, Notification::ERROR_STATE, $message, $linkValue);
+        $this->update($id, Notification::ERROR_STATE, $message, $notificationLink);
     }
 
     /**
      * @param AttributeBag $data
-     * @param string $linkValue
      * @return int
      * @throws AssertionFailedException
      * @throws ExceptionInterface
      * @throws JsonException
      */
-    public function create(AttributeBag $data, string $linkValue): int
+    public function create(AttributeBag $data): int
     {
         $notification = new Notification();
 
         $username = $data->get('username');
         $subTitle = $data->get('subTitle');
         $title = $data->get('title');
-        /*$link = $data->get('link');
-        $externalLink = $data->get('externalLink');
-        $apiLink = $data->get('apiLink');*/
         $status = $data->get('status');
+        $linkValue = $data->get('link');
+        if ($linkValue){
+            Assertion::isInstanceOf($linkValue, NotificationLink::class);
+            $methodName = $linkValue->getNotificationMethodName();
+            $notification->$methodName($linkValue->getLink());
+        }
 
         $notification->setUsername(new Username($username));
         $notification->setTitle(new Title($title));
         $notification->setSubTitle($subTitle);
         $notification->setStatus(new Status($status));
-
-        $this->updateLink($this->link, $linkValue);
-
-        /*$notification->setLink($link);
-        $notification->setExternalLink($externalLink);
-        $notification->setApiLink($apiLink);*/
 
         $this->objectManager->persist($notification);
         $this->objectManager->flush();
@@ -116,16 +110,20 @@ class NotificationService
      * @param int $id
      * @param string $status
      * @param string $message
-     * @param string $linkValue
+     * @param NotificationLink $linkValue
      * @throws ExceptionInterface
      * @throws JsonException
      */
-    private function update(int $id, string $status, string $message, string $linkValue): void
+    private function update(int $id, string $status, string $message, ?NotificationLink $linkValue = null): void
     {
         /** @var  $notification */
         $notification = $this->notificationRepository->getOneById($id);
 
-        $this->updateLink($this->link, $linkValue);
+        if ($linkValue){
+            $methodName = $linkValue->getNotificationMethodName();
+            $notification->$methodName($linkValue->getLink());
+        }
+
         $notification->setStatus($status);
         $notification->setMessage($message);
 
@@ -138,18 +136,5 @@ class NotificationService
                 json_encode($this->normalizer->normalize($notification, 'json'), JSON_THROW_ON_ERROR, 512)
             );
         }
-    }
-
-    /**
-     * @param LinkableInterface $link
-     * @param string $linkValue
-     * @return Notification
-     */
-    public function updateLink(LinkableInterface $link, string $linkValue)
-    {
-        if (!$link instanceof LinkableInterface) {
-            throw new \RuntimeException('Invalid link');
-        }
-        return $link->syncLink($linkValue);
     }
 }

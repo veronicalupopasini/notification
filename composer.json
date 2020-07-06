@@ -20,6 +20,11 @@
             "Esc\\Notification\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Esc\\Tests\\": "tests"
+        }
+    },
     "require": {
         "php": "^7.3",
         "ext-json": "*",
@@ -35,7 +40,10 @@
         "symfony/security-core": "^5.0",
         "symfony/serializer": "^5.0"
     },
-    "require-dev": {},
+    "require-dev": {
+        "dg/bypass-finals": "^1.2",
+        "phpunit/phpunit": "^8.5"
+    },
     "config": {
         "sort-packages": true
     }
